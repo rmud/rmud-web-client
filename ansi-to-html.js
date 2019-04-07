@@ -1,3 +1,6 @@
+// Following changes to ansi-to-html were made by RMUD team:
+// - Treats bold text as highlighted.
+
 /* const entities = require('entities'); */
 const defaults = {
     fg: '#FFF',
@@ -139,7 +142,11 @@ function handleDisplay(stack, code, options) {
     } else if (4 < code && code < 7) {
         result = pushTag(stack, 'blink');
     } else if (29 < code && code < 38) {
-        result = pushForegroundColor(stack, options.colors[code - 30]);
+        if (stack.slice(-1)[0] !== 'b') {
+            result = pushForegroundColor(stack, options.colors[code - 30]);
+	} else {
+            result = pushForegroundColor(stack, options.colors[8 + code - 30]);
+	}
     } else if ((39 < code && code < 48)) {
         result = pushBackgroundColor(stack, options.colors[code - 40]);
     } else if ((89 < code && code < 98)) {
